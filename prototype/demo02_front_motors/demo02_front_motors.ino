@@ -30,34 +30,59 @@ void setup()
   pinMode(in4, OUTPUT);
 
   // Now turn off motors
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, LOW);  
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, LOW);  
+  disable();  
 }
 
-void turn_right()
+void enable_right()
 {
-  // digitalWrite(in1, LOW);
-  // digitalWrite(in2, HIGH);  
   digitalWrite(in3, LOW);
   digitalWrite(in4, HIGH);
 }
 
-void turn_left()
+void enable_left()
 {
-  // digitalWrite(in1, HIGH);
-  // digitalWrite(in2, LOW);  
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);
 }
 
-void make_turn(int force=255)
+void make_turn(int force=255, int forceDelay=2000)
 {
   analogWrite(enB, force);
-  delay(150);
+  delay(forceDelay);
   analogWrite(enB, 0);
-  delay(1000);
+  delay(100);
+}
+
+void turn_right()
+{ 
+  enable_right();
+  make_turn(255, 2000);
+
+  enable_left();
+  make_turn(10, 80);
+
+  disable();
+  delay(500);
+}
+
+void turn_left()
+{
+  enable_left();
+  make_turn(255, 2000);
+
+  enable_right();
+  make_turn(10, 80);
+
+  disable();
+  delay(500);
+}
+
+void disable()
+{
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);  
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, LOW);
 }
 
 void demo()
@@ -68,24 +93,18 @@ void demo()
   // Turn on motors to right
   turn_right();
 
-  // Accelerate a little bit
-  make_turn();
+  // Wait a bit
+  delay(1000);
 
   // Turn on motors to left
   turn_left();
 
-  // Accelerate a little bit
-  make_turn();
-
   // Now turn off motors
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, LOW);  
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, LOW);  
+  disable();
 }
 
 void loop()
 {
   demo();
-  delay(5000);
+  delay(4000);
 }
